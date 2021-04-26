@@ -1,5 +1,6 @@
 package com.thoughtworks.firenze.texas.holdem.domain;
 
+import com.thoughtworks.firenze.texas.holdem.constants.Constants;
 import com.thoughtworks.firenze.texas.holdem.utils.CloneUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 
 @Getter
@@ -22,11 +24,13 @@ public class Round {
     private Player currentPlayer;
     private Integer followChip;
     private Integer chipPool;
+    private Boolean isCompleted;
 
     public Round play(Operation operation) {
         Round result = CloneUtil.clone(this, Round.class);
         switch (operation.getAction()) {
             case PET:
+                result.chipPool += currentPlayer.pet(followChip);
                 result.completedPlayers.add(currentPlayer);
                 result.currentPlayer = result.waitingPlayers.poll();
                 break;
@@ -42,11 +46,16 @@ public class Round {
                 while (!result.completedPlayers.isEmpty()) {
                     result.waitingPlayers.add(result.completedPlayers.poll());
                 }
+                result.chipPool += currentPlayer.raise(followChip);
+                result.followChip = result.followChip * Constants.RAISE_MULTIPLE;
                 result.completedPlayers.add(currentPlayer);
                 result.currentPlayer = result.waitingPlayers.poll();
                 break;
             default:
                 throw new RuntimeException("Not Allowed Action");
+        }
+        if (Objects.isNull(result.currentPlayer) && waitingPlayers.isEmpty()) {
+            result.isCompleted = true;
         }
         return result;
     }

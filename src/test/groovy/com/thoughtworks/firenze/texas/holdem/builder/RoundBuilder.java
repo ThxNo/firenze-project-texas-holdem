@@ -1,6 +1,5 @@
 package com.thoughtworks.firenze.texas.holdem.builder;
 
-import com.thoughtworks.firenze.texas.holdem.domain.Player;
 import com.thoughtworks.firenze.texas.holdem.domain.Round;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,6 +17,6 @@ public class RoundBuilder {
                     .waitingPlayers(new LinkedList<>())
                     .currentPlayer(null)
                     .chipPool(0)
-                    .followChip(0);
+                    .followChip(1);
     }
 }
