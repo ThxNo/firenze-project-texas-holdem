@@ -21,19 +21,19 @@
 
   - 跟注
 
-    ![image-20210425101049094](/Users/fei/workspace/firenze-project/firenze-project-texas-holdem/README.assets/image-20210425101049094.png)
+    ![image-20210425101049094](https://raw.githubusercontent.com/ThxNo/firenze-project-texas-holdem/main/README.assets/image-20210425101049094.png)
 
   - 加注
 
-    ![image-20210425101110934](/Users/fei/workspace/firenze-project/firenze-project-texas-holdem/README.assets/image-20210425101110934.png)
+    ![image-20210425101110934](https://raw.githubusercontent.com/ThxNo/firenze-project-texas-holdem/main/README.assets/image-20210425101110934.png)
 
   - 弃牌
 
-    ![image-20210425101121951](/Users/fei/workspace/firenze-project/firenze-project-texas-holdem/README.assets/image-20210425101121951.png)
+    ![image-20210425101121951](https://raw.githubusercontent.com/ThxNo/firenze-project-texas-holdem/main/README.assets/image-20210425101121951.png)
 
   - 过牌（第一轮不能选择）
 
-    ![image-20210425101132016](/Users/fei/workspace/firenze-project/firenze-project-texas-holdem/README.assets/image-20210425101132016.png)
+    ![image-20210425101132016](https://raw.githubusercontent.com/ThxNo/firenze-project-texas-holdem/main/README.assets/image-20210425101132016.png)
 
 - 玩家在任⼀轮次中放弃则退出游戏，投⼊底池的资⾦从筹码中扣除
 
@@ -124,5 +124,5 @@
 - 如有人ALL IN，则以ALL IN玩家参与的回合作为特殊结算点，依据结算点将奖池进行划分，并分别进行摊牌比较
   - 如下情况下，最终B玩家获得20筹码，A玩家获得9筹码
 
-![all-in-example](/Users/fei/workspace/firenze-project/firenze-project-texas-holdem/README.assets/image-20210425092320352.png)
+![all-in-example](https://raw.githubusercontent.com/ThxNo/firenze-project-texas-holdem/main/README.assets/image-20210425092320352.png)
 
