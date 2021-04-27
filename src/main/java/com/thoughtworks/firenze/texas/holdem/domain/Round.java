@@ -24,9 +24,9 @@ public class Round {
     private Player currentPlayer;
     private Integer followChip;
     private Integer chipPool;
-    private Boolean isCompleted;
+    private Boolean ended;
 
-    public Round play(Operation operation) {
+    public Round next(Operation operation) {
         Round result = CloneUtil.clone(this, Round.class);
         switch (operation.getAction()) {
             case PET:
@@ -54,9 +54,19 @@ public class Round {
             default:
                 throw new RuntimeException("Not Allowed Action");
         }
-        if (Objects.isNull(result.currentPlayer) && waitingPlayers.isEmpty()) {
-            result.isCompleted = true;
+        if (result.shouldEndRound()) {
+            result.ended = true;
         }
         return result;
+    }
+
+    private boolean shouldEndRound() {
+        return (Objects.isNull(currentPlayer) && waitingPlayers.isEmpty()) ||
+                countInGamePlayerCount() <= 1;
+    }
+
+    public Integer countInGamePlayerCount() {
+        int result = waitingPlayers.size() + completedPlayers.size();
+        return Objects.isNull(currentPlayer) ? result : result + 1;
     }
 }

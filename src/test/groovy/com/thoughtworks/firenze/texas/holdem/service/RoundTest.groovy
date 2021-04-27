@@ -19,7 +19,7 @@ class RoundTest extends Specification {
                 .currentPlayer(PlayerBuilder.withDefault().name("D").build())
                 .build()
         when:
-        def result = round.play(Operation.builder().action(Action.PET).build())
+        def result = round.next(Operation.builder().action(Action.PET).build())
         then:
         result.abstainedPlayer.size() == 0
         result.chipPool == round.chipPool + round.followChip
@@ -40,7 +40,7 @@ class RoundTest extends Specification {
                 .currentPlayer(PlayerBuilder.withDefault().name("D").build())
                 .build()
         when:
-        def result = round.play(Operation.builder().action(Action.PASS).build())
+        def result = round.next(Operation.builder().action(Action.PASS).build())
         then:
         result.completedPlayers.size() == 0
         result.abstainedPlayer.size() == 0
@@ -59,7 +59,7 @@ class RoundTest extends Specification {
                 .currentPlayer(PlayerBuilder.withDefault().name("D").build())
                 .build()
         when:
-        def result = round.play(Operation.builder().action(Action.FOLD).build())
+        def result = round.next(Operation.builder().action(Action.FOLD).build())
         then:
         result.completedPlayers.size() == 0
         result.abstainedPlayer.size() == 1
@@ -80,7 +80,7 @@ class RoundTest extends Specification {
                 .currentPlayer(PlayerBuilder.withDefault().name("D").build())
                 .build()
         when:
-        def result = round.play(Operation.builder().action(Action.RAISE).build())
+        def result = round.next(Operation.builder().action(Action.RAISE).build())
         then:
         result.completedPlayers.size() == 1
         result.abstainedPlayer.size() == 0
@@ -102,8 +102,8 @@ class RoundTest extends Specification {
                 .currentPlayer(PlayerBuilder.withDefault().name("D").build())
                 .build()
         when:
-        def result = round.play(Operation.builder().action(Action.PET).build())
+        def result = round.next(Operation.builder().action(Action.PET).build())
         then:
-        result.isCompleted
+        result.ended
     }
 }

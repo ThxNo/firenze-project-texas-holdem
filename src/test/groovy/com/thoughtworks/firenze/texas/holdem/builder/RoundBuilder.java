@@ -17,6 +17,7 @@ public class RoundBuilder {
                     .waitingPlayers(new LinkedList<>())
                     .currentPlayer(null)
                     .chipPool(0)
-                    .followChip(1);
+                    .followChip(1)
+                    .ended(false);
     }
 }
