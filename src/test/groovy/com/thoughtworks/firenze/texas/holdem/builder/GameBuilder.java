@@ -15,6 +15,7 @@ public class GameBuilder {
                    .waitingRounds(new LinkedList<>())
                    .completedRounds(new ArrayList<>())
                    .currentRound(RoundBuilder.withDefault().build())
+                   .settlementPointGames(new ArrayList<>())
                    .ended(false);
     }
 }

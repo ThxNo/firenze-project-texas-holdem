@@ -103,4 +103,11 @@ public class Round {
         }
         return result;
     }
+
+    void updateRoundAfterAllIn(Integer currentPlayerRemainChips) {
+        Streams.concat(getCompletedPlayers().stream(), getWaitingPlayers().stream())
+               .forEach(player -> player.setBettingChips(player.getBettingChips() - currentPlayerRemainChips));
+        getAbstainedPlayer().add(getCurrentPlayer());
+        setCurrentPlayer(getWaitingPlayers().poll());
+    }
 }
