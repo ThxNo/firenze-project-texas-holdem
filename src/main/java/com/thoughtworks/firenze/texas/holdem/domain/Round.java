@@ -1,5 +1,6 @@
 package com.thoughtworks.firenze.texas.holdem.domain;
 
+import com.google.common.collect.Streams;
 import com.thoughtworks.firenze.texas.holdem.constants.Constants;
 import com.thoughtworks.firenze.texas.holdem.utils.CloneUtil;
 import lombok.AllArgsConstructor;
@@ -7,11 +8,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Getter
 @Setter
 @Builder
@@ -27,6 +31,10 @@ public class Round {
     private Boolean ended;
 
     public Round next(Operation operation) {
+        if (ended) {
+            log.warn("round is ended, Operation: {} is invalid", operation);
+            return this;
+        }
         Round result = CloneUtil.clone(this, Round.class);
         switch (operation.getAction()) {
             case PET:
@@ -68,5 +76,14 @@ public class Round {
     public Integer countInGamePlayerCount() {
         int result = waitingPlayers.size() + completedPlayers.size();
         return Objects.isNull(currentPlayer) ? result : result + 1;
+    }
+
+    public List<Player> getAllPlayers() {
+        List<Player> result = Streams.concat(waitingPlayers.stream(), abstainedPlayer.stream(), completedPlayers.stream())
+                                     .collect(Collectors.toList());
+        if (Objects.nonNull(currentPlayer)) {
+            result.add(currentPlayer);
+        }
+        return result;
     }
 }
