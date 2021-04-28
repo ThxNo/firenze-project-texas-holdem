@@ -38,7 +38,7 @@ public class Game {
             game.ended = true;
         } else if (game.shouldBeginNextRound()) {
             game.completedRounds.add(game.currentRound);
-            game.currentRound = waitingRounds.poll();
+            game.currentRound = game.waitingRounds.poll();
         }
         return game;
     }
@@ -58,6 +58,13 @@ public class Game {
         if (!ended) {
             throw new GameNotEndedException();
         }
+        GameSettlement gameSettlement = getGameSettlement();
+        List<String> winner = getWinner();
+        gameSettlement.settle(winner);
+        return gameSettlement;
+    }
+
+    private GameSettlement getGameSettlement() {
         HashMap<String, PlayerSettlement> playerName2Settlement = new HashMap<>();
         completedRounds.stream().map(Round::getAllPlayers).forEach(players -> {
             players.forEach(player -> {
@@ -69,12 +76,9 @@ public class Game {
                 }
             });
         });
-        List<String> winner = getWinner();
-        GameSettlement gameSettlement = GameSettlement.builder()
-                                                      .playerSettlements(new ArrayList<>(playerName2Settlement.values()))
-                                                      .build();
-        gameSettlement.settle(winner);
-        return gameSettlement;
+        return GameSettlement.builder()
+                             .playerSettlements(new ArrayList<>(playerName2Settlement.values()))
+                             .build();
     }
 
     public List<String> getWinner() {

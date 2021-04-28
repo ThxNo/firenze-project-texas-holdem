@@ -1,4 +1,4 @@
-package com.thoughtworks.firenze.texas.holdem.service
+package com.thoughtworks.firenze.texas.holdem.domain
 
 import com.thoughtworks.firenze.texas.holdem.builder.PlayerBuilder
 import com.thoughtworks.firenze.texas.holdem.builder.RoundBuilder
