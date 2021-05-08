@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 public class PlayerBuilder {
 
     public static Player.PlayerBuilder withDefault() {
-        return Player.builder().totalChip(100).bettingChips(0);
+        return Player.builder().active(true).tookAction(false).roundWager(0).totalChip(100).wager(0);
     }
 }

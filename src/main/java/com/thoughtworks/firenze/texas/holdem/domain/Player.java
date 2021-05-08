@@ -1,6 +1,5 @@
 package com.thoughtworks.firenze.texas.holdem.domain;
 
-import com.thoughtworks.firenze.texas.holdem.constants.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,24 +13,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Player {
     private String name;
-    private Integer bettingChips;
+    private Boolean tookAction;
+    @Builder.Default
+    private Boolean active = true;
+    private Integer wager;
+    private Integer roundWager;
     private Integer totalChip;
 
-    public Integer pet(Integer followChip) {
-        if (bettingChips >= followChip) {
-            return 0;
-        }
-        int sub = followChip - bettingChips;
-        bettingChips = followChip;
-        return sub;
-    }
-
-    public Integer raise(Integer followChip) {
-        if (bettingChips >= followChip * Constants.RAISE_MULTIPLE) {
-            return 0;
-        }
-        int sub = followChip * Constants.RAISE_MULTIPLE - bettingChips;
-        bettingChips = followChip * Constants.RAISE_MULTIPLE;
-        return sub;
+    public void wager(Integer followChip) {
+        wager += followChip - roundWager;
+        roundWager = followChip;
     }
 }

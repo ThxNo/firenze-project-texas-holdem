@@ -1,7 +1,6 @@
 package com.thoughtworks.firenze.texas.holdem.domain;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Streams;
 import com.thoughtworks.firenze.texas.holdem.domain.enums.Action;
 import com.thoughtworks.firenze.texas.holdem.exception.GameNotEndedException;
 import com.thoughtworks.firenze.texas.holdem.exception.PlayerNotFoundException;
@@ -40,34 +39,33 @@ public class Game {
             log.warn("Game is ended, operation:{} is invalid", operation);
             return this;
         }
-        Game game = CloneUtil.clone(this, Game.class);
         if (Action.ALL_IN.equals(operation.getAction())) {
-            Integer currentPlayerRemainChips = game.getCurrentPlayerRemainChips();
-            game.buildSettlementPointGame(currentPlayerRemainChips);
+            Integer currentPlayerRemainChips = getCurrentPlayerRemainChips();
+            buildSettlementPointGame(currentPlayerRemainChips);
             completedRounds = new ArrayList<>();
             currentRound.updateRoundAfterAllIn(currentPlayerRemainChips);
         }else {
-            game.currentRound = game.currentRound.next(operation);
+            currentRound = currentRound.next(operation);
         }
-        if (game.shouldEndGame()) {
-            game.ended = true;
-        } else if (game.shouldBeginNextRound()) {
-            game.completedRounds.add(game.currentRound);
-            game.currentRound = game.waitingRounds.poll();
+        if (shouldEndGame()) {
+            ended = true;
+        } else if (shouldBeginNextRound()) {
+            completedRounds.add(currentRound);
+            currentRound = waitingRounds.poll();
         }
-        return game;
+        return this;
     }
 
     private void buildSettlementPointGame(Integer currentPlayerRemainChips) {
-        Queue<Player> completedPlayers = new LinkedList<>();
-        Streams.concat(currentRound.getCompletedPlayers().stream(), currentRound.getWaitingPlayers().stream())
-               .forEach(player -> completedPlayers.add(CloneUtil.clone(player, Player.class)));
-        completedPlayers.add(CloneUtil.clone(currentRound.getCurrentPlayer(), Player.class));
-        completedPlayers.forEach(completedPlayer -> completedPlayer.setBettingChips(currentPlayerRemainChips));
+        List<Player> players = new ArrayList<>();
+        currentRound.getAllPlayers().forEach(player -> players.add(CloneUtil.clone(player, Player.class)));
+        players.stream().filter(Player::getActive).forEach(player -> {
+            player.setWager(player.getWager() - player.getRoundWager() + currentPlayerRemainChips);
+            player.setRoundWager(currentPlayerRemainChips);
+        });
         Round endedRound = Round.builder()
-                           .completedPlayers(completedPlayers)
-                           .abstainedPlayer(currentRound.getAbstainedPlayer())
-                           .waitingPlayers(new LinkedList<>())
+                           .players(players)
+                           .awaitingPlayers(new LinkedList<>())
                            .followChip(currentPlayerRemainChips)
                            .ended(true)
                            .build();
@@ -82,14 +80,14 @@ public class Game {
 
     private Integer getCurrentPlayerRemainChips() {
         Player currentPlayer = currentRound.getCurrentPlayer();
-        Integer bettingChips = currentPlayer.getBettingChips();
+        Integer wagers = currentPlayer.getRoundWager();
         for (Round completedRound : completedRounds) {
-            Player playerInCompletedRound = completedRound.getCompletedPlayers().stream()
+            Player playerInCompletedRound = completedRound.getAllPlayers().stream()
                                                           .filter(player -> StringUtils.equals(player.getName(), currentPlayer.getName()))
                                                           .findAny().orElseThrow(PlayerNotFoundException::new);
-            bettingChips += playerInCompletedRound.getBettingChips();
+            wagers += playerInCompletedRound.getRoundWager();
         }
-        return currentPlayer.getTotalChip() - bettingChips;
+        return currentPlayer.getTotalChip() - wagers;
     }
 
     private Boolean shouldBeginNextRound() {
@@ -144,7 +142,7 @@ public class Game {
             players.forEach(player -> {
                 if (playerName2Settlement.containsKey(player.getName())) {
                     PlayerSettlement settlement = playerName2Settlement.get(player.getName());
-                    settlement.setBettingChips(settlement.getBettingChips() + player.getBettingChips());
+                    settlement.setBettingChips(settlement.getBettingChips() + player.getRoundWager());
                 } else {
                     playerName2Settlement.putIfAbsent(player.getName(), PlayerSettlement.of(player));
                 }

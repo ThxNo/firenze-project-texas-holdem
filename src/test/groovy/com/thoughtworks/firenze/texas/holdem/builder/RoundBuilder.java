@@ -4,7 +4,6 @@ import com.thoughtworks.firenze.texas.holdem.domain.Round;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -12,11 +11,7 @@ public class RoundBuilder {
 
     public static Round.RoundBuilder withDefault() {
         return Round.builder()
-                    .abstainedPlayer(new ArrayList<>())
-                    .completedPlayers(new LinkedList<>())
-                    .waitingPlayers(new LinkedList<>())
-                    .currentPlayer(null)
-                    .chipPool(0)
+                    .awaitingPlayers(new LinkedList<>())
                     .followChip(1)
                     .ended(false);
     }

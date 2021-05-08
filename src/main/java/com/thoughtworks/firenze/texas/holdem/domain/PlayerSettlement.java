@@ -20,7 +20,7 @@ public class PlayerSettlement {
     public static PlayerSettlement of(Player player) {
         return PlayerSettlement.builder().name(player.getName())
                                .totalChips(player.getTotalChip())
-                               .bettingChips(player.getBettingChips())
+                               .bettingChips(player.getRoundWager())
                                .build();
     }
 }
