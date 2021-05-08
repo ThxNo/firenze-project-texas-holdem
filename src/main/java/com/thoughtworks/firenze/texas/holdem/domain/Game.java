@@ -2,6 +2,7 @@ package com.thoughtworks.firenze.texas.holdem.domain;
 
 import com.google.common.collect.ImmutableList;
 import com.thoughtworks.firenze.texas.holdem.domain.enums.Action;
+import com.thoughtworks.firenze.texas.holdem.domain.operation.Operation;
 import com.thoughtworks.firenze.texas.holdem.exception.GameNotEndedException;
 import com.thoughtworks.firenze.texas.holdem.exception.PlayerNotFoundException;
 import com.thoughtworks.firenze.texas.holdem.utils.CloneUtil;

@@ -1,7 +1,6 @@
 package com.thoughtworks.firenze.texas.holdem.domain;
 
-import com.thoughtworks.firenze.texas.holdem.constants.Constants;
-import com.thoughtworks.firenze.texas.holdem.exception.InvalidOperationException;
+import com.thoughtworks.firenze.texas.holdem.domain.operation.Operation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,60 +29,23 @@ public class Round {
             log.warn("round is ended, Operation: {} is invalid", operation);
             return this;
         }
-        switch (operation.getAction()) {
-            case PET:
-                pet();
-                break;
-            case PASS:
-                pass();
-                break;
-            case FOLD:
-                fold();
-                break;
-            case RAISE:
-                raise();
-                break;
-            default:
-                throw new InvalidOperationException("Not Allowed Action");
-        }
+        Player currentPlayer = awaitingPlayers.poll();
+
+        operation.execute(this, currentPlayer);
+
+        currentPlayer.setTookAction(true);
         if (shouldEndRound()) {
             ended = true;
         }
         return this;
     }
 
-    private void pet() {
-        Player currentPlayer = awaitingPlayers.poll();
-
-        currentPlayer.wager(followChip);
-        currentPlayer.setTookAction(true);
-
-        awaitingPlayers.add(currentPlayer);
-    }
-
-    private void pass() {
-        Player currentPlayer = awaitingPlayers.poll();
-
-        currentPlayer.setTookAction(true);
-
-        awaitingPlayers.add(currentPlayer);
-    }
-
-    private void fold() {
-        Player currentPlayer = awaitingPlayers.poll();
-
+    public void inactive(Player currentPlayer) {
         currentPlayer.setActive(false);
-        currentPlayer.setTookAction(true);
     }
 
-    private void raise() {
-        Player currentPlayer = awaitingPlayers.poll();
-
-        followChip = followChip * Constants.RAISE_MULTIPLE;
-        currentPlayer.wager(followChip);
-        currentPlayer.setTookAction(true);
-
-        awaitingPlayers.add(currentPlayer);
+    public boolean await(Player currentPlayer) {
+        return awaitingPlayers.add(currentPlayer);
     }
 
     private boolean shouldEndRound() {
@@ -109,7 +71,7 @@ public class Round {
             player.setWager(player.getRoundWager() - currentPlayerRemainChips);
             player.setRoundWager(player.getRoundWager() - currentPlayerRemainChips);
         });
-        currentPlayer.setActive(false);
+        inactive(currentPlayer);
     }
 
     public Player getCurrentPlayer() {

@@ -3,7 +3,10 @@ package com.thoughtworks.firenze.texas.holdem.domain
 import com.thoughtworks.firenze.texas.holdem.builder.PlayerBuilder
 import com.thoughtworks.firenze.texas.holdem.builder.RoundBuilder
 import com.thoughtworks.firenze.texas.holdem.constants.Constants
-import com.thoughtworks.firenze.texas.holdem.domain.enums.Action
+import com.thoughtworks.firenze.texas.holdem.domain.operation.Fold
+import com.thoughtworks.firenze.texas.holdem.domain.operation.Pass
+import com.thoughtworks.firenze.texas.holdem.domain.operation.Pet
+import com.thoughtworks.firenze.texas.holdem.domain.operation.Raise
 import spock.lang.Specification
 
 class RoundTest extends Specification {
@@ -22,7 +25,7 @@ class RoundTest extends Specification {
                 .followChip(followChip)
                 .build()
         when:
-        def result = round.next(Operation.builder().action(Action.PET).build())
+        def result = round.next(new Pet())
         then:
         result.awaitingPlayers.peek().name == "B"
         result.awaitingPlayers.stream().filter { it.name == "A" }.findFirst().get().tookAction
@@ -45,7 +48,7 @@ class RoundTest extends Specification {
                 .followChip(followChip)
                 .build()
         when:
-        def result = round.next(Operation.builder().action(Action.PASS).build())
+        def result = round.next(new Pass())
         then:
         result.awaitingPlayers.peek().name == "B"
         result.awaitingPlayers.stream().filter { it.name == "A" }.findFirst().get().tookAction
@@ -67,7 +70,7 @@ class RoundTest extends Specification {
                 .followChip(followChip)
                 .build()
         when:
-        def result = round.next(Operation.builder().action(Action.FOLD).build())
+        def result = round.next(new Fold())
         then:
         result.awaitingPlayers.peek().name == "B"
         result.players.stream().filter { it.name == "A" }.findFirst().get().tookAction
@@ -90,7 +93,7 @@ class RoundTest extends Specification {
                 .followChip(followChip)
                 .build()
         when:
-        def result = round.next(Operation.builder().action(Action.RAISE).build())
+        def result = round.next(new Raise())
         then:
         result.followChip == followChip * Constants.RAISE_MULTIPLE
         result.awaitingPlayers.peek().name == "B"
@@ -113,7 +116,7 @@ class RoundTest extends Specification {
                 .followChip(followChip)
                 .build()
         when:
-        def result = round.next(Operation.builder().action(Action.PET).build())
+        def result = round.next(new Pet())
         then:
         result.ended
     }

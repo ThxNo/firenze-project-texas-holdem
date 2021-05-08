@@ -3,7 +3,9 @@ package com.thoughtworks.firenze.texas.holdem.domain
 import com.thoughtworks.firenze.texas.holdem.builder.GameBuilder
 import com.thoughtworks.firenze.texas.holdem.builder.PlayerBuilder
 import com.thoughtworks.firenze.texas.holdem.builder.RoundBuilder
-import com.thoughtworks.firenze.texas.holdem.domain.enums.Action
+import com.thoughtworks.firenze.texas.holdem.domain.operation.AllIn
+import com.thoughtworks.firenze.texas.holdem.domain.operation.Fold
+import com.thoughtworks.firenze.texas.holdem.domain.operation.Pet
 import spock.lang.Specification
 
 class GameTest extends Specification {
@@ -24,7 +26,7 @@ class GameTest extends Specification {
                 .waitingRounds(new LinkedList<Round>([RoundBuilder.withDefault().build()]))
                 .currentRound(currentRound).build()
         when:
-        def result = game.next(Operation.builder().action(Action.FOLD).build())
+        def result = game.next(new Fold())
         then:
         result.ended
         result.currentRound.ended
@@ -47,7 +49,7 @@ class GameTest extends Specification {
                 .waitingRounds(new LinkedList<Round>([RoundBuilder.withDefault().build()]))
                 .currentRound(currentRound).build()
         when:
-        def result = game.next(Operation.builder().action(Action.PET).build())
+        def result = game.next(new Pet())
         then:
         !result.ended
         result.completedRounds.last().ended
@@ -102,7 +104,7 @@ class GameTest extends Specification {
                 .waitingRounds(new LinkedList<Round>([RoundBuilder.withDefault().build()]))
                 .currentRound(currentRound).build()
         when:
-        def result = game.next(Operation.builder().action(Action.ALL_IN).build())
+        def result = game.next(new AllIn())
         then:
         result.settlementPointGames.size() == 1
         result.settlementPointGames[0].ended
