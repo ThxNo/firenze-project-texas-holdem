@@ -1,5 +1,6 @@
 package com.thoughtworks.firenze.texas.holdem.domain.operation;
 
+import com.thoughtworks.firenze.texas.holdem.domain.Game;
 import com.thoughtworks.firenze.texas.holdem.domain.Player;
 import com.thoughtworks.firenze.texas.holdem.domain.Round;
 import com.thoughtworks.firenze.texas.holdem.domain.enums.Action;
@@ -14,5 +15,10 @@ public class Pet implements Operation {
     public void execute(Round round, Player currentPlayer) {
         currentPlayer.wager(round.getFollowChip());
         round.await(currentPlayer);
+    }
+
+    @Override
+    public void execute(Game game) {
+        game.getCurrentRound().next(this);
     }
 }

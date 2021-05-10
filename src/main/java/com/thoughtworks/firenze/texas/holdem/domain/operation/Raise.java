@@ -1,6 +1,7 @@
 package com.thoughtworks.firenze.texas.holdem.domain.operation;
 
 import com.thoughtworks.firenze.texas.holdem.constants.Constants;
+import com.thoughtworks.firenze.texas.holdem.domain.Game;
 import com.thoughtworks.firenze.texas.holdem.domain.Player;
 import com.thoughtworks.firenze.texas.holdem.domain.Round;
 import com.thoughtworks.firenze.texas.holdem.domain.enums.Action;
@@ -16,5 +17,10 @@ public class Raise implements Operation {
         round.setFollowChip(round.getFollowChip() * Constants.RAISE_MULTIPLE);
         currentPlayer.wager(round.getFollowChip());
         round.await(currentPlayer);
+    }
+
+    @Override
+    public void execute(Game game) {
+        game.getCurrentRound().next(this);
     }
 }

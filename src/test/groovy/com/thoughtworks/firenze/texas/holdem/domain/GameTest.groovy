@@ -23,13 +23,12 @@ class GameTest extends Specification {
                 .followChip(1)
                 .build()
         def game = GameBuilder.withDefault()
-                .waitingRounds(new LinkedList<Round>([RoundBuilder.withDefault().build()]))
                 .currentRound(currentRound).build()
         when:
         def result = game.next(new Fold())
         then:
         result.ended
-        result.currentRound.ended
+        result.completedRounds.last().ended
     }
 
     def "should start a new round when current round ended"() {
@@ -46,7 +45,6 @@ class GameTest extends Specification {
                 .followChip(followChip)
                 .build()
         def game = GameBuilder.withDefault()
-                .waitingRounds(new LinkedList<Round>([RoundBuilder.withDefault().build()]))
                 .currentRound(currentRound).build()
         when:
         def result = game.next(new Pet())
@@ -66,7 +64,6 @@ class GameTest extends Specification {
         def turn = createCompletedRound(1, completedPlayers)
         def river = createCompletedRound(1, completedPlayers)
         def game = Spy(GameBuilder.withDefault()
-                .waitingRounds()
                 .currentRound(null)
                 .ended(true)
                 .completedRounds(new LinkedList<Round>([preFlop, flop, turn, river])).build())
@@ -101,7 +98,6 @@ class GameTest extends Specification {
                 .followChip(followChip)
                 .build()
         def game = GameBuilder.withDefault()
-                .waitingRounds(new LinkedList<Round>([RoundBuilder.withDefault().build()]))
                 .currentRound(currentRound).build()
         when:
         def result = game.next(new AllIn())
@@ -130,12 +126,10 @@ class GameTest extends Specification {
                                                                     PlayerBuilder.withDefault().name("B").roundWager(2).build(),
                                                                     PlayerBuilder.withDefault().name("C").roundWager(2).build()]))
         def settlePointGame = Spy(GameBuilder.withDefault()
-                .waitingRounds()
                 .currentRound(null)
                 .ended(true)
                 .completedRounds(new LinkedList<Round>([preFlop, flop, turn1])).build())
         def game = Spy(GameBuilder.withDefault()
-                .waitingRounds()
                 .currentRound(null)
                 .ended(true)
                 .settlementPointGames([settlePointGame]))

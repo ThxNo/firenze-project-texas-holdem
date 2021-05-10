@@ -24,4 +24,8 @@ public class Player {
         wager += followChip - roundWager;
         roundWager = followChip;
     }
+
+    int getRemainChips() {
+        return getTotalChip() - getWager();
+    }
 }

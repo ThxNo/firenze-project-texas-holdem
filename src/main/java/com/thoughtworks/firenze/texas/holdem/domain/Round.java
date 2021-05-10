@@ -1,5 +1,6 @@
 package com.thoughtworks.firenze.texas.holdem.domain;
 
+import com.thoughtworks.firenze.texas.holdem.domain.enums.RoundName;
 import com.thoughtworks.firenze.texas.holdem.domain.operation.Operation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Round {
+    private RoundName name;
     private List<Player> players;
     private Queue<Player> awaitingPlayers;
     private Integer followChip;
@@ -65,11 +67,10 @@ public class Round {
         return players;
     }
 
-    void updateRoundAfterAllIn(Integer currentPlayerRemainChips) {
-        Player currentPlayer = awaitingPlayers.poll();
+    public void updateRoundAfterAllIn(Player currentPlayer) {
         getActivePlayers().forEach(player -> {
-            player.setWager(player.getRoundWager() - currentPlayerRemainChips);
-            player.setRoundWager(player.getRoundWager() - currentPlayerRemainChips);
+            player.setWager(player.getRoundWager() - currentPlayer.getRemainChips());
+            player.setRoundWager(player.getRoundWager() - currentPlayer.getRemainChips());
         });
         inactive(currentPlayer);
     }
@@ -77,4 +78,24 @@ public class Round {
     public Player getCurrentPlayer() {
         return awaitingPlayers.peek();
     }
+
+    public Round initNextRound() {
+        Round nextRound = Round.builder()
+                               .name(RoundName.values()[getName().ordinal() + 1])
+                               .ended(false)
+                               .followChip(followChip)
+                               .players(players)
+                               .awaitingPlayers(awaitingPlayers)
+                               .build();
+        nextRound.getAllPlayers().forEach(player -> {
+            player.setRoundWager(0);
+            player.setTookAction(false);
+        });
+        return nextRound;
+    }
+
+    public Integer getCurrentPlayerRemainChips() {
+        return getCurrentPlayer().getRemainChips();
+    }
+
 }
