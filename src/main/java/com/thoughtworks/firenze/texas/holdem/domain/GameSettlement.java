@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -28,9 +27,8 @@ public class GameSettlement {
             playerSettlement.setWinChips(-playerSettlement.getWagers());
         });
 
-        Optional<Integer> totalPetChips = playerSettlements.stream().map(PlayerSettlement::getWagers).reduce(Integer::sum);
-        if (totalPetChips.isPresent() && !winners.isEmpty()) {
-            Integer winningChips = totalPetChips.get() / winners.size();
+        if (!winners.isEmpty()) {
+            Integer winningChips = getTotalWagers() / winners.size();
             winners.forEach(winner -> playerSettlements.stream()
                                                        .filter(playerSettlement -> winner.equals(playerSettlement.getName()))
                                                        .forEach(playerSettlement -> {
@@ -38,5 +36,11 @@ public class GameSettlement {
                                                            playerSettlement.setWinChips(winningChips + playerSettlement.getWinChips());
                                                        }));
         }
+    }
+
+    private Integer getTotalWagers() {
+        return playerSettlements.stream()
+                                .map(PlayerSettlement::getWagers)
+                                .reduce(Integer::sum).get();
     }
 }
