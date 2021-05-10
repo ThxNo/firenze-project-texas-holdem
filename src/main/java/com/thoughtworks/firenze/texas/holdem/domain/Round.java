@@ -73,6 +73,14 @@ public class Round {
             player.setRoundWager(player.getRoundWager() - currentPlayer.getRemainChips());
         });
         inactive(currentPlayer);
+        getInActivePlayers().forEach(player -> {
+            player.setWager(0);
+            player.setRoundWager(0);
+        });
+    }
+
+    private List<Player> getInActivePlayers() {
+        return players.stream().filter(player -> !player.getActive()).collect(Collectors.toList());
     }
 
     public Player getCurrentPlayer() {
