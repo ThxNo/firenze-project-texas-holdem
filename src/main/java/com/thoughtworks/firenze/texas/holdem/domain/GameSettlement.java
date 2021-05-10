@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -14,6 +15,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class GameSettlement {
     private List<PlayerSettlement> playerSettlements;
+
+    public static GameSettlement getGameSettlement(List<Player> players) {
+        return builder()
+                .playerSettlements(players.stream().map(PlayerSettlement::of).collect(Collectors.toList()))
+                .build();
+    }
 
     public void settle(List<String> winners) {
         playerSettlements.forEach(playerSettlement -> {

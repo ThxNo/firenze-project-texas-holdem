@@ -117,16 +117,10 @@ public class Game {
     }
 
     private GameSettlement doSettlement() {
-        GameSettlement gameSettlement = getGameSettlement();
-        List<String> winner = calcuWinner();
-        gameSettlement.settle(winner);
+        List<String> winners = calcuWinner();
+        GameSettlement gameSettlement = GameSettlement.getGameSettlement(players);
+        gameSettlement.settle(winners);
         return gameSettlement;
-    }
-
-    private GameSettlement getGameSettlement() {
-        return GameSettlement.builder()
-                             .playerSettlements(players.stream().map(PlayerSettlement::of).collect(Collectors.toList()))
-                             .build();
     }
 
     public List<String> calcuWinner() {
