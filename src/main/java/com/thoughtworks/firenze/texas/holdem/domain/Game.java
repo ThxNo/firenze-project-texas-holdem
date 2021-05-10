@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Game {
-
+    public List<Player> players;
     public Round currentRound;
     private List<Round> completedRounds;
     private Boolean ended;
@@ -60,8 +60,8 @@ public class Game {
         List<Player> players = new ArrayList<>();
         currentRound.getAllPlayers().forEach(player -> players.add(CloneUtil.clone(player, Player.class)));
         players.stream().filter(Player::getActive).forEach(player -> {
-            player.setWager(player.getWager() - player.getRoundWager() + currentPlayerRemainChips);
-            player.setRoundWager(currentPlayerRemainChips);
+            player.setWagers(player.getWagers() - player.getRoundWagers() + currentPlayerRemainChips);
+            player.setRoundWagers(currentPlayerRemainChips);
         });
         Round endedRound = Round.builder()
                                 .players(players)
@@ -105,7 +105,7 @@ public class Game {
                 playerSettlement -> {
                     if (playerName2PlayerSettlement.containsKey(playerSettlement.getName())) {
                         PlayerSettlement settlement = playerName2PlayerSettlement.get(playerSettlement.getName());
-                        settlement.setBettingChips(settlement.getBettingChips() + playerSettlement.getBettingChips());
+                        settlement.setWagers(settlement.getWagers() + playerSettlement.getWagers());
                         settlement.setWinChips(settlement.getWinChips() + playerSettlement.getWinChips());
                         settlement.setTotalChips(settlement.getTotalChips() + playerSettlement.getWinChips());
                     } else {
@@ -124,19 +124,8 @@ public class Game {
     }
 
     private GameSettlement getGameSettlement() {
-        HashMap<String, PlayerSettlement> playerName2Settlement = new HashMap<>();
-        completedRounds.stream().map(Round::getAllPlayers).forEach(players -> {
-            players.forEach(player -> {
-                if (playerName2Settlement.containsKey(player.getName())) {
-                    PlayerSettlement settlement = playerName2Settlement.get(player.getName());
-                    settlement.setBettingChips(settlement.getBettingChips() + player.getRoundWager());
-                } else {
-                    playerName2Settlement.putIfAbsent(player.getName(), PlayerSettlement.of(player));
-                }
-            });
-        });
         return GameSettlement.builder()
-                             .playerSettlements(new ArrayList<>(playerName2Settlement.values()))
+                             .playerSettlements(players.stream().map(PlayerSettlement::of).collect(Collectors.toList()))
                              .build();
     }
 

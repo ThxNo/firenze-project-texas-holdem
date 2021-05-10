@@ -36,7 +36,7 @@ class GameTest extends Specification {
         def followChip = 1
         def players = [
                 PlayerBuilder.withDefault().name("A").build(),
-                PlayerBuilder.withDefault().tookAction(true).roundWager(followChip).name("B").build(),
+                PlayerBuilder.withDefault().tookAction(true).roundWagers(followChip).name("B").build(),
                 PlayerBuilder.withDefault().active(false).name("C").build(),
                 PlayerBuilder.withDefault().active(false).name("D").build()]
         def currentRound = RoundBuilder.withDefault()
@@ -54,16 +54,17 @@ class GameTest extends Specification {
     }
 
     def "should calculate game settlement when game is over"() {
-        def completedPlayers = new LinkedList<Player>([PlayerBuilder.withDefault().name("A").tookAction(true).wager(1).roundWager(1).build(),
-                                                       PlayerBuilder.withDefault().name("B").tookAction(true).wager(1).roundWager(1).build(),
-                                                       PlayerBuilder.withDefault().name("C").tookAction(true).wager(1).roundWager(1).build(),
-                                                       PlayerBuilder.withDefault().name("D").tookAction(true).wager(1).roundWager(1).build()])
+        def completedPlayers = new LinkedList<Player>([PlayerBuilder.withDefault().name("A").tookAction(true).wagers(4).roundWagers(1).build(),
+                                                       PlayerBuilder.withDefault().name("B").tookAction(true).wagers(4).roundWagers(1).build(),
+                                                       PlayerBuilder.withDefault().name("C").tookAction(true).wagers(4).roundWagers(1).build(),
+                                                       PlayerBuilder.withDefault().name("D").tookAction(true).wagers(4).roundWagers(1).build()])
         given:
         def preFlop = createCompletedRound(1, completedPlayers)
         def flop = createCompletedRound(1, completedPlayers)
         def turn = createCompletedRound(1, completedPlayers)
         def river = createCompletedRound(1, completedPlayers)
         def game = Spy(GameBuilder.withDefault()
+                .players(new ArrayList<Player>(completedPlayers))
                 .currentRound(null)
                 .ended(true)
                 .completedRounds(new LinkedList<Round>([preFlop, flop, turn, river])).build())
@@ -89,7 +90,7 @@ class GameTest extends Specification {
         def followChip = 1
         def players = [
                 PlayerBuilder.withDefault().name("A").build(),
-                PlayerBuilder.withDefault().name("B").tookAction(true).wager(followChip).roundWager(followChip).build(),
+                PlayerBuilder.withDefault().name("B").tookAction(true).wagers(followChip).roundWagers(followChip).build(),
                 PlayerBuilder.withDefault().active(false).name("C").build(),
                 PlayerBuilder.withDefault().active(false).name("D").build()]
         def currentRound = RoundBuilder.withDefault()
@@ -108,28 +109,31 @@ class GameTest extends Specification {
 
 
     def "should calculate game settlement with all in when game is over"() {
-        def completedPlayers = new LinkedList<Player>([PlayerBuilder.withDefault().name("A").tookAction(true).wager(2).roundWager(2).build(),
-                                                       PlayerBuilder.withDefault().name("B").tookAction(true).wager(2).roundWager(2).build(),
-                                                       PlayerBuilder.withDefault().name("C").tookAction(true).wager(2).roundWager(2).build(),
-                                                       PlayerBuilder.withDefault().name("D").tookAction(true).wager(2).roundWager(2).totalChip(5).build()])
+        def completedPlayers = new LinkedList<Player>([PlayerBuilder.withDefault().name("A").tookAction(true).wagers(5).roundWagers(2).build(),
+                                                       PlayerBuilder.withDefault().name("B").tookAction(true).wagers(5).roundWagers(2).build(),
+                                                       PlayerBuilder.withDefault().name("C").tookAction(true).wagers(5).roundWagers(2).build(),
+                                                       PlayerBuilder.withDefault().name("D").tookAction(true).wagers(5).roundWagers(2).totalChip(5).build()])
         given:
         def preFlop = createCompletedRound(2, completedPlayers)
         def flop = createCompletedRound(2, completedPlayers)
-        def turn1 = createCompletedRound(1, new LinkedList<Player>([PlayerBuilder.withDefault().name("A").roundWager(1).build(),
-                                                                    PlayerBuilder.withDefault().name("B").roundWager(1).build(),
-                                                                    PlayerBuilder.withDefault().name("C").roundWager(1).build(),
-                                                                    PlayerBuilder.withDefault().name("D").roundWager(1).totalChip(5).build()]))
-        def turn2 = createCompletedRound(1, new LinkedList<Player>([PlayerBuilder.withDefault().name("A").roundWager(1).build(),
-                                                                    PlayerBuilder.withDefault().name("B").roundWager(1).build(),
-                                                                    PlayerBuilder.withDefault().name("C").roundWager(1).build()]))
-        def river = createCompletedRound(2, new LinkedList<Player>([PlayerBuilder.withDefault().name("A").roundWager(2).build(),
-                                                                    PlayerBuilder.withDefault().name("B").roundWager(2).build(),
-                                                                    PlayerBuilder.withDefault().name("C").roundWager(2).build()]))
+        def turn1 = createCompletedRound(1, new LinkedList<Player>([PlayerBuilder.withDefault().name("A").wagers(5).roundWagers(1).build(),
+                                                                    PlayerBuilder.withDefault().name("B").wagers(5).roundWagers(1).build(),
+                                                                    PlayerBuilder.withDefault().name("C").wagers(5).roundWagers(1).build(),
+                                                                    PlayerBuilder.withDefault().name("D").wagers(5).roundWagers(1).totalChip(5).build()]))
+        def turn2 = createCompletedRound(1, new LinkedList<Player>([PlayerBuilder.withDefault().name("A").roundWagers(1).build(),
+                                                                    PlayerBuilder.withDefault().name("B").roundWagers(1).build(),
+                                                                    PlayerBuilder.withDefault().name("C").roundWagers(1).build()]))
+        def playersAfterAllIn = [PlayerBuilder.withDefault().name("A").wagers(3).roundWagers(2).build(),
+                                 PlayerBuilder.withDefault().name("B").wagers(3).roundWagers(2).build(),
+                                 PlayerBuilder.withDefault().name("C").wagers(3).roundWagers(2).build()]
+        def river = createCompletedRound(2, new LinkedList<Player>(playersAfterAllIn))
         def settlePointGame = Spy(GameBuilder.withDefault()
+                .players(completedPlayers)
                 .currentRound(null)
                 .ended(true)
                 .completedRounds(new LinkedList<Round>([preFlop, flop, turn1])).build())
         def game = Spy(GameBuilder.withDefault()
+                .players(playersAfterAllIn)
                 .currentRound(null)
                 .ended(true)
                 .settlementPointGames([settlePointGame]))

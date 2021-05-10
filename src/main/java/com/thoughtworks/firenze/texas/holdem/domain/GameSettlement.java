@@ -17,11 +17,11 @@ public class GameSettlement {
 
     public void settle(List<String> winners) {
         playerSettlements.forEach(playerSettlement -> {
-            playerSettlement.setTotalChips(playerSettlement.getTotalChips() - playerSettlement.getBettingChips());
-            playerSettlement.setWinChips(-playerSettlement.getBettingChips());
+            playerSettlement.setTotalChips(playerSettlement.getTotalChips() - playerSettlement.getWagers());
+            playerSettlement.setWinChips(-playerSettlement.getWagers());
         });
 
-        Optional<Integer> totalPetChips = playerSettlements.stream().map(PlayerSettlement::getBettingChips).reduce(Integer::sum);
+        Optional<Integer> totalPetChips = playerSettlements.stream().map(PlayerSettlement::getWagers).reduce(Integer::sum);
         if (totalPetChips.isPresent() && !winners.isEmpty()) {
             Integer winningChips = totalPetChips.get() / winners.size();
             winners.forEach(winner -> playerSettlements.stream()

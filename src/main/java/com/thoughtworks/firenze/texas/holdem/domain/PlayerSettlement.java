@@ -13,14 +13,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PlayerSettlement {
     private String name;
-    private Integer bettingChips;
+    private Integer wagers;
     private Integer winChips;
     private Integer totalChips;
 
     public static PlayerSettlement of(Player player) {
         return PlayerSettlement.builder().name(player.getName())
                                .totalChips(player.getTotalChip())
-                               .bettingChips(player.getRoundWager())
+                               .wagers(player.getWagers())
                                .build();
     }
 }

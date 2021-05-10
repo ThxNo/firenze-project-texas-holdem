@@ -17,7 +17,7 @@ class RoundTest extends Specification {
                 PlayerBuilder.withDefault().name("A").build(),
                 PlayerBuilder.withDefault().name("B").build(),
                 PlayerBuilder.withDefault().name("C").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("D").build()]
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("D").build()]
         def waitingPlayers = new LinkedList<>(players)
         def round = RoundBuilder.withDefault()
                 .players(players)
@@ -29,7 +29,7 @@ class RoundTest extends Specification {
         then:
         result.awaitingPlayers.peek().name == "B"
         result.awaitingPlayers.stream().filter { it.name == "A" }.findFirst().get().tookAction
-        result.awaitingPlayers.stream().filter { it.name == "A" }.findFirst().get().wager == followChip
+        result.awaitingPlayers.stream().filter { it.name == "A" }.findFirst().get().wagers == followChip
         !result.ended
     }
 
@@ -40,7 +40,7 @@ class RoundTest extends Specification {
                 PlayerBuilder.withDefault().name("A").build(),
                 PlayerBuilder.withDefault().name("B").build(),
                 PlayerBuilder.withDefault().name("C").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("D").build()]
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("D").build()]
         def waitingPlayers = new LinkedList<>(players)
         def round = RoundBuilder.withDefault()
                 .players(players)
@@ -62,7 +62,7 @@ class RoundTest extends Specification {
                 PlayerBuilder.withDefault().name("A").build(),
                 PlayerBuilder.withDefault().name("B").build(),
                 PlayerBuilder.withDefault().name("C").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("D").build()]
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("D").build()]
         def waitingPlayers = new LinkedList<>(players)
         def round = RoundBuilder.withDefault()
                 .players(players)
@@ -83,9 +83,9 @@ class RoundTest extends Specification {
         def followChip = 1
         def players = [
                 PlayerBuilder.withDefault().name("A").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("B").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("C").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("D").build()]
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("B").build(),
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("C").build(),
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("D").build()]
         def waitingPlayers = new LinkedList<>(players)
         def round = RoundBuilder.withDefault()
                 .players(players)
@@ -106,9 +106,9 @@ class RoundTest extends Specification {
         def followChip = 1
         def players = [
                 PlayerBuilder.withDefault().name("A").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("B").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("C").build(),
-                PlayerBuilder.withDefault().tookAction(true).wager(followChip).roundWager(followChip).name("D").build()]
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("B").build(),
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("C").build(),
+                PlayerBuilder.withDefault().tookAction(true).wagers(followChip).roundWagers(followChip).name("D").build()]
         def waitingPlayers = new LinkedList<>(players)
         def round = RoundBuilder.withDefault()
                 .players(players)

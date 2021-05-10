@@ -16,16 +16,16 @@ public class Player {
     private Boolean tookAction;
     @Builder.Default
     private Boolean active = true;
-    private Integer wager;
-    private Integer roundWager;
+    private Integer wagers;
+    private Integer roundWagers;
     private Integer totalChip;
 
     public void wager(Integer followChip) {
-        wager += followChip - roundWager;
-        roundWager = followChip;
+        wagers += followChip - roundWagers;
+        roundWagers = followChip;
     }
 
     int getRemainChips() {
-        return getTotalChip() - getWager();
+        return getTotalChip() - getWagers();
     }
 }

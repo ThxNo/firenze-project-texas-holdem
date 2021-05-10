@@ -51,7 +51,7 @@ public class Round {
     }
 
     private boolean shouldEndRound() {
-        return getActivePlayers().stream().allMatch(player -> player.getRoundWager().equals(followChip)) ||
+        return getActivePlayers().stream().allMatch(player -> player.getRoundWagers().equals(followChip)) ||
                 countInGamePlayerCount() <= 1;
     }
 
@@ -69,13 +69,13 @@ public class Round {
 
     public void updateRoundAfterAllIn(Player currentPlayer) {
         getActivePlayers().forEach(player -> {
-            player.setWager(player.getRoundWager() - currentPlayer.getRemainChips());
-            player.setRoundWager(player.getRoundWager() - currentPlayer.getRemainChips());
+            player.setWagers(player.getRoundWagers() - currentPlayer.getRemainChips());
+            player.setRoundWagers(player.getRoundWagers() - currentPlayer.getRemainChips());
         });
         inactive(currentPlayer);
         getInActivePlayers().forEach(player -> {
-            player.setWager(0);
-            player.setRoundWager(0);
+            player.setWagers(0);
+            player.setRoundWagers(0);
         });
     }
 
@@ -96,7 +96,7 @@ public class Round {
                                .awaitingPlayers(awaitingPlayers)
                                .build();
         nextRound.getAllPlayers().forEach(player -> {
-            player.setRoundWager(0);
+            player.setRoundWagers(0);
             player.setTookAction(false);
         });
         return nextRound;
