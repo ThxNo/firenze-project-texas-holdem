@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,6 +31,10 @@ public class Game {
     private List<Round> completedRounds;
     private Boolean ended;
     private List<Game> settlementPointGames;
+    @Builder.Default
+    private Poker poker = new Poker();
+    @Builder.Default
+    private List<Card> publicCards = new ArrayList<>();
 
     public Game next(Operation operation) {
         if (ended) {
@@ -47,6 +52,9 @@ public class Game {
 
     private void nextRound(Round round) {
         completedRounds.add(currentRound);
+        if (Objects.nonNull(round)) {
+            publicCards.addAll(poker.deal(round.getName().getDealCount()));
+        }
         currentRound = round;
     }
 
@@ -127,4 +135,13 @@ public class Game {
         //TODO: 计算组合牌大小
         return ImmutableList.of("A");
     }
+
+    public List<Card> getPublicCards() {
+        return publicCards;
+    }
+
+    public void start() {
+        players.forEach(player -> player.addCards(poker.deal(2)));
+    }
+
 }

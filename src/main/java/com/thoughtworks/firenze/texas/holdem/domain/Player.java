@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -19,6 +22,8 @@ public class Player {
     private Integer wagers;
     private Integer roundWagers;
     private Integer totalChip;
+    @Builder.Default
+    private List<Card> cards = new ArrayList<>();
 
     public void wager(Integer followChip) {
         wagers += followChip - roundWagers;
@@ -27,5 +32,9 @@ public class Player {
 
     int getRemainChips() {
         return getTotalChip() - getWagers();
+    }
+
+    boolean addCards(List<Card> deal) {
+        return getCards().addAll(deal);
     }
 }
