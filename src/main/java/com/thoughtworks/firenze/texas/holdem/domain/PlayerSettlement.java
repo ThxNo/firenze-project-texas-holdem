@@ -23,4 +23,14 @@ public class PlayerSettlement {
                                .wagers(player.getWagers())
                                .build();
     }
+
+    void win(Integer winningChips) {
+        setTotalChips(getTotalChips() + winningChips);
+        setWinChips(winningChips + getWinChips());
+    }
+
+    void deductingBettingChips() {
+        setTotalChips(getTotalChips() - getWagers());
+        setWinChips(-getWagers());
+    }
 }

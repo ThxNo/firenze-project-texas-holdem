@@ -22,19 +22,13 @@ public class GameSettlement {
     }
 
     public void settle(List<String> winners) {
-        playerSettlements.forEach(playerSettlement -> {
-            playerSettlement.setTotalChips(playerSettlement.getTotalChips() - playerSettlement.getWagers());
-            playerSettlement.setWinChips(-playerSettlement.getWagers());
-        });
+        playerSettlements.forEach(PlayerSettlement::deductingBettingChips);
 
         if (!winners.isEmpty()) {
             Integer winningChips = getTotalWagers() / winners.size();
             winners.forEach(winner -> playerSettlements.stream()
                                                        .filter(playerSettlement -> winner.equals(playerSettlement.getName()))
-                                                       .forEach(playerSettlement -> {
-                                                           playerSettlement.setTotalChips(playerSettlement.getTotalChips() + winningChips);
-                                                           playerSettlement.setWinChips(winningChips + playerSettlement.getWinChips());
-                                                       }));
+                                                       .forEach(playerSettlement -> playerSettlement.win(winningChips)));
         }
     }
 
