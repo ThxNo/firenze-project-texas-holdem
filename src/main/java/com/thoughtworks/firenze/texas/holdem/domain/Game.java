@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.thoughtworks.firenze.texas.holdem.domain.enums.RoundName;
 import com.thoughtworks.firenze.texas.holdem.domain.operation.Operation;
 import com.thoughtworks.firenze.texas.holdem.exception.GameNotEndedException;
+import com.thoughtworks.firenze.texas.holdem.utils.CardCombinationComparator;
+import com.thoughtworks.firenze.texas.holdem.utils.CardCombiner;
 import com.thoughtworks.firenze.texas.holdem.utils.CloneUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +135,10 @@ public class Game {
     }
 
     public List<String> calcuWinner() {
+        List<Pair<Player, CardCombination>> player2CardCombination = players.stream().map(player ->
+                Pair.of(player, CardCombinationComparator.getLargestCombination(CardCombiner.combine(publicCards, player)))).collect(Collectors.toList());
         //TODO: 计算组合牌大小
+
         return ImmutableList.of("A");
     }
 
