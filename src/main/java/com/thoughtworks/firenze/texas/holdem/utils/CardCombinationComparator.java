@@ -13,6 +13,7 @@ public class CardCombinationComparator {
             return null;
         }
         return cardCombinations.stream()
+                               .peek(CardCombination::calculateScore)
                                .max(Comparator.comparing(CardCombination::getScore))
                                .get();
     }
