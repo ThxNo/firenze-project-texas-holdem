@@ -16,4 +16,8 @@ import lombok.Setter;
 public class Card {
     private PokerValue value;
     private PokerType type;
+
+    public Integer getNumericValue() {
+        return value.getValue();
+    }
 }
